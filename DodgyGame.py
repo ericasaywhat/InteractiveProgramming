@@ -1,4 +1,7 @@
 import pygame
+from pygame.locals import QUIT, KEYDOWN
+import time
+from random import choice
 from math import sqrt
 import cv2
 import numpy as np
@@ -52,8 +55,10 @@ while(True):
     faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
     a = int(cap.get(3))
     for (x,y,w,h) in faces:
-        frame[y:y+h, x:x+w, :] = cv2.dilate(frame[y:y+h, x:x+w, :], kernel)
+        
         cv2.rectangle(frame, (x,y),(x+w, y+h), (0,0,255))
+        if x > a:
+            print 'right'
     cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
