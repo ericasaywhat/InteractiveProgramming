@@ -1,5 +1,7 @@
 import pygame
 from math import sqrt
+import cv2
+import numpy as np
 
 class Sky():
     def __init__(self, width = 500, height = 500):
@@ -11,12 +13,14 @@ class Sky():
         self.height = height
     
     def _draw_background(self):
-        self.screen.fill((135, 206, 250))
+        self.screen.fill(pygame.Color(135, 206, 250))
+        pygame.display.update()
         
     def main_loop(self):
         running = True
-        while (running):
+        while running:
             self._draw_background()
+
 
 class Birds(object):
     def __init__(self, radius, coord, image_loc, is_obstacle = True):
@@ -38,12 +42,24 @@ class User(object):
         self.coord = coord
         self.image = pygame.image.load(image_loc)
 
-    def _movement(self):
+    def movement(self):
         pass
-        # opencv stuff here? idk
-
-
+cap = cv2.VideoCapture(0)
+face_cascade = cv2.CascadeClassifier('/home/arianaolson/haarcascade_frontalface_alt.xml')
+while(True):
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
+    a = int(cap.get(3))
+    for (x,y,w,h) in faces:
+        frame[y:y+h, x:x+w, :] = cv2.dilate(frame[y:y+h, x:x+w, :], kernel)
+        cv2.rectangle(frame, (x,y),(x+w, y+h), (0,0,255))
+    cv2.imshow('frame',frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows   
 if __name__ == "__main__":
     g = Sky()
-    g.main_loop
-    
+    g.main_loop()
+   
