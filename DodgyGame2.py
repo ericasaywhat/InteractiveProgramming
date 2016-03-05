@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import QUIT, KEYDOWN
 import time
 from random import *
+import cv2
+import numpy as np
 
 class SkyModel(object):
     def __init__(self, width, height):
@@ -76,11 +78,23 @@ class User(object):
 class Movement(object):
     def __init__(self, model):
         self.model = model
+    def handle_event(self, event):
+        ret, frame = cap.read()
+        faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
+        while running:
+            for (x,y,w,h) in faces:
+                self.model.user.center_x = x + radius
+        
+
 
 
 if __name__ == '__main__':
     pygame.init()
     size = (500, 500)
+
+    cap = cv2.VideoCapture(0)
+    face_cascade = cv2.CascadeClassifier('/home/arianaolson/haarcascade_frontalface_alt.xml')
+    kernel = np.ones((21,21), 'uint8')
 
     model = SkyModel(size[0], size[1])
     view = View(model, size)
@@ -91,8 +105,8 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 running = False
             else:
-                continue
-                # controller.handle_event(event)
+                movement.handle_event(event)
+
         model.update()
         view.draw()
-        time.sleep(.1)
+        time.sleep(.001)
