@@ -43,6 +43,9 @@ class View(object):
                            pygame.Color('white'),
                            (self.model.user.center_x, self.model.user.center_y),
                            self.model.user.radius)
+        
+
+
 
         # r = pygame.Rect(self.model.paddle.left,
         #                 self.model.paddle.top,
@@ -60,12 +63,12 @@ class Bird(object):
         self.center_x = center_x
         self.center_y = center_y
         self.radius = radius
-        self.growth = 5
+        self.growth = 1
     
     def update(self):
         """ Update the position of the ball due to time passing """
         self.radius += self.growth
-        self.center_y += 20
+        self.center_y += 10
 
 class User(object):
     """ Represents the user in my dodging game """
@@ -74,6 +77,8 @@ class User(object):
         self.center_x = center_x
         self.center_y = center_y
         self.radius = radius
+        self.image = pygame.image.load('/home/erica/Downloads/10338419_10152954770602828_7884103075790453982_o.jpg')
+
 
 class Movement(object):
     def __init__(self, model):
@@ -85,6 +90,7 @@ class Movement(object):
             for (x,y,w,h) in faces:
                 self.model.user.center_x = x + radius
         
+# face_cascade = cv2.CascadeClassifier('/erica/opencv/data/haarcascades_cuda/haarcascade_frontalface_alt.xml')
 
 
 
@@ -93,7 +99,8 @@ if __name__ == '__main__':
     size = (500, 500)
 
     cap = cv2.VideoCapture(0)
-    face_cascade = cv2.CascadeClassifier('/home/arianaolson/haarcascade_frontalface_alt.xml')
+    face_cascade = cv2.CascadeClassifier('/erica/opencv/data/haarcascades_cuda/haarcascade_frontalface_alt.xml')
+    
     kernel = np.ones((21,21), 'uint8')
 
     model = SkyModel(size[0], size[1])
@@ -105,8 +112,8 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 running = False
             else:
-                movement.handle_event(event)
-
+                pass
+                # movement.handle_event(event)
         model.update()
         view.draw()
-        time.sleep(.001)
+        time.sleep(.1)
