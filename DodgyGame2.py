@@ -79,11 +79,11 @@ class Movement(object):
     def __init__(self, model):
         self.model = model
     def handle_event(self, event):
-        ret, frame = cap.read()
-        faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
-        while running:
-            for (x,y,w,h) in faces:
-                self.model.user.center_x = x + radius
+        # ret, frame = cap.read()
+        # faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
+        for (x,y,w,h) in faces:
+            self.model.user.center_x = 500-(x + self.model.user.radius)
+            print x
         
 
 
@@ -94,19 +94,27 @@ if __name__ == '__main__':
 
     cap = cv2.VideoCapture(0)
     face_cascade = cv2.CascadeClassifier('/home/arianaolson/haarcascade_frontalface_alt.xml')
-    kernel = np.ones((21,21), 'uint8')
+    # kernel = np.ones((21,21), 'uint8')
 
     model = SkyModel(size[0], size[1])
     view = View(model, size)
     movement = Movement(model)
     running = True
+    # ret, frame = cap.read()
+    # faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
     while running:
+        ret, frame = cap.read()
+        faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
             else:
                 movement.handle_event(event)
-
+                break
         model.update()
         view.draw()
-        time.sleep(.001)
+        time.sleep(.01)
+    cap.release()     
+        
+
+   
