@@ -36,7 +36,7 @@ class View(object):
         # draw all the bricks to the screen
         self.screen.fill(pygame.Color(135, 206, 250))
         pygame.draw.circle(self.screen,
-                           pygame.Color('yellow'),
+                           self.model.bird.color,
                            (self.model.bird.center_x, self.model.bird.center_y),
                            self.model.bird.radius)
         pygame.draw.circle(self.screen,
@@ -55,17 +55,28 @@ class View(object):
 
 class Bird(object):
     """ Represents a bird in my dodging game """
-    def __init__(self, center_x, center_y, radius):
+    def __init__(self, center_x, center_y, radius, color = pygame.Color('yellow')):
         """ Create a ball object with the specified geometry """
         self.center_x = center_x
         self.center_y = center_y
         self.radius = radius
-        self.growth = 5
+        self.growth = 2
+        self.color = color
     
     def update(self):
         """ Update the position of the ball due to time passing """
-        # self.radius += self.growth
-        self.center_y += 20
+        self.radius += self.growth
+        if self.center_y < 500:
+            self.center_y += 20
+            self.color = pygame.Color('yellow')
+        else:
+            self.center_y = 0
+            self.radius = 10
+            self.center_x = randint(0, 500)
+            self.color = pygame.Color('yellow')
+        if self.radius >= 40:
+            self.color = pygame.Color('red')
+
 
 class User(object):
     """ Represents the user in my dodging game """
